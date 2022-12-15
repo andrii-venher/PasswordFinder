@@ -1,0 +1,6 @@
+(executables
+ (public_names password_finder)
+ (names password_finder)
+ (libraries threads domainslib digestif)
+ (flags (:standard -I +threads))
+ )
