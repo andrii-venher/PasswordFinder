@@ -23,7 +23,8 @@ let worker in_ch out_ch hashes password_length suffix =
     match Domainslib.Chan.recv_poll in_ch with
     | None -> ()
     | Some(None) -> Hashtbl.clear hashes;
-    | Some(Some(Decrypted{ username = _; password_encrypted; password_decrypted = _; })) -> Hashtbl.remove hashes password_encrypted
+    | Some(Some(Decrypted{ username = _; password_encrypted; password_decrypted = _; })) -> 
+      Hashtbl.remove hashes password_encrypted;
     | Some(Some(Encrypted({ username = _; password_encrypted = _}))) -> failwith "Wrong data format."
   in
 
@@ -74,25 +75,26 @@ let create_hashes data =
     | _ -> failwith "Wrong data format.") data;
   hashes
 
-let rec message_hub in_ch out_chs =
-  match Domainslib.Chan.recv in_ch with
-  | None -> 
-    Printf.printf "Received none\n";
-    flush stdout;
-    List.iter (fun out_ch -> Domainslib.Chan.send out_ch (None)) out_chs;
-    ()
-  | Some(message) ->
-    List.iter (fun out_ch -> Domainslib.Chan.send out_ch (Some(message))) out_chs;
-    message_hub in_ch out_chs
+let message_hub in_ch out_chs expected_messages =
+  let rec aux expected_messages =
+    if expected_messages <= 0 then 
+      ()
+    else
+      match Domainslib.Chan.recv in_ch with
+      | Some(message) ->
+        List.iter (fun out_ch -> Domainslib.Chan.send out_ch (Some(message))) out_chs;
+        aux (expected_messages - 1)
+      | None -> 
+        failwith "Unexpected message." in
+  aux expected_messages
 
-let create_threads pool data =
+let create_threads pool hashes =
   let out_ch = Domainslib.Chan.make_unbounded () in
-  let hashes = create_hashes data in
   let rec aux acc = function
   | ch -> 
     if ch <= 'z' then
       let in_ch = Domainslib.Chan.make_unbounded () in
-      let _ = Domainslib.Task.async pool (fun _ -> worker in_ch out_ch hashes 6 ch) in
+      let _ = Domainslib.Task.async pool (fun _ -> worker in_ch out_ch (Hashtbl.copy hashes) 6 ch) in
       aux (in_ch::acc) (Utils.char_add ch 1)
     else
       acc in
@@ -102,14 +104,18 @@ let run data =
   let pool = Domainslib.Task.setup_pool ~num_domains:15 () in
   Printf.printf "Created task pool\n";
   flush stdout;
-  let threads = create_threads pool data in
+  let hashes = create_hashes data in
+  let threads = create_threads pool hashes in
   Printf.printf "Created workers\n";
   flush stdout;
   let message_hub_promise = Domainslib.Task.async pool (fun _ -> message_hub (fst threads) (snd threads)) in
-  Printf.printf "Created message hub\n";
-  flush stdout;
   Domainslib.Task.run pool (fun _ ->
-    let _ = Domainslib.Task.await pool message_hub_promise in ());
-  Domainslib.Task.teardown_pool pool;
-  Printf.printf "Stopped\n";
+    let _ = Domainslib.Task.await pool message_hub_promise (Hashtbl.length hashes) in 
+    Printf.printf "Task awaited\n";
+    flush stdout;
+  );
+  Printf.printf "Before teardown\n";
   flush stdout;
+  Domainslib.Task.teardown_pool pool;
+  Printf.printf "Stopped after teardown\n";
+  flush stdout
