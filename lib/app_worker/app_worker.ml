@@ -22,7 +22,9 @@ let worker in_ch out_ch hashes password_length suffix =
   let pool_updates () =
     match Domainslib.Chan.recv_poll in_ch with
     | None -> ()
-    | Some({ username = _; password_encrypted; password_decrypted = _; }) -> Hashtbl.remove hashes password_encrypted
+    | Some(None) -> Hashtbl.clear hashes;
+    | Some(Some(Decrypted{ username = _; password_encrypted; password_decrypted = _; })) -> Hashtbl.remove hashes password_encrypted
+    | Some(Some(Encrypted({ username = _; password_encrypted = _}))) -> failwith "Wrong data format."
   in
 
   let check_exit () =
@@ -39,9 +41,11 @@ let worker in_ch out_ch hashes password_length suffix =
     | None -> ()
     | Some(username) -> 
       let password_decrypted = Bytes.to_string password in
-      let result = { username; password_encrypted; password_decrypted; } in
-      Domainslib.Chan.send out_ch result;
-      Hashtbl.remove hashes password_encrypted;
+      let decryption_result = Decrypted{ username; password_encrypted; password_decrypted; } in
+      Printf.printf "Worker %c -> %s\n" suffix (App_io.format_output_line decryption_result);
+      flush stdout;
+      Domainslib.Chan.send out_ch (Some(decryption_result));
+      (* Hashtbl.remove hashes password_encrypted; *)
       () in
 
   let rec aux password =
@@ -50,6 +54,8 @@ let worker in_ch out_ch hashes password_length suffix =
       ()
     else
       if next_password password then (
+        (* Printf.printf "Worker %c generated %s\n" suffix (Bytes.to_string password);
+        flush stdout; *)
         check_password password;
         aux password
       )
@@ -59,3 +65,51 @@ let worker in_ch out_ch hashes password_length suffix =
   let password = init_password () in
   check_password password;
   aux password
+
+let create_hashes data =
+  let hashes = Hashtbl.create (List.length data) in
+  List.iter (fun user_data -> 
+    match user_data with
+    | Encrypted({ username; password_encrypted; }) -> Hashtbl.add hashes password_encrypted username
+    | _ -> failwith "Wrong data format.") data;
+  hashes
+
+let rec message_hub in_ch out_chs =
+  match Domainslib.Chan.recv in_ch with
+  | None -> 
+    Printf.printf "Received none\n";
+    flush stdout;
+    List.iter (fun out_ch -> Domainslib.Chan.send out_ch (None)) out_chs;
+    ()
+  | Some(message) ->
+    List.iter (fun out_ch -> Domainslib.Chan.send out_ch (Some(message))) out_chs;
+    message_hub in_ch out_chs
+
+let create_threads pool data =
+  let out_ch = Domainslib.Chan.make_unbounded () in
+  let hashes = create_hashes data in
+  let rec aux acc = function
+  | ch -> 
+    if ch <= 'z' then
+      let in_ch = Domainslib.Chan.make_unbounded () in
+      let _ = Domainslib.Task.async pool (fun _ -> worker in_ch out_ch hashes 6 ch) in
+      aux (in_ch::acc) (Utils.char_add ch 1)
+    else
+      acc in
+  (out_ch, aux [] 'a')
+
+let run data =
+  let pool = Domainslib.Task.setup_pool ~num_domains:15 () in
+  Printf.printf "Created task pool\n";
+  flush stdout;
+  let threads = create_threads pool data in
+  Printf.printf "Created workers\n";
+  flush stdout;
+  let message_hub_promise = Domainslib.Task.async pool (fun _ -> message_hub (fst threads) (snd threads)) in
+  Printf.printf "Created message hub\n";
+  flush stdout;
+  Domainslib.Task.run pool (fun _ ->
+    let _ = Domainslib.Task.await pool message_hub_promise in ());
+  Domainslib.Task.teardown_pool pool;
+  Printf.printf "Stopped\n";
+  flush stdout;
