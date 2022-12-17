@@ -1,4 +1,4 @@
-let worker in_ch out_ch hashes password_length suffix = 
+let run_worker in_ch out_ch hashes password_length suffix = 
 
   let rec aux password =
     (* if true then
