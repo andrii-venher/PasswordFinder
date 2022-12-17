@@ -1,0 +1,3 @@
+(library
+ (name app_worker)
+ (libraries app_domain utils threads domainslib))
