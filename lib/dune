@@ -1,1 +1,3 @@
-
+(library
+ (name password_finder_lib)
+ (libraries threads domainslib digestif))
