@@ -1,0 +1,3 @@
+(library
+ (name app_io)
+ (libraries app_domain))
