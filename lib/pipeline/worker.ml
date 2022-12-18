@@ -48,7 +48,12 @@ let run password hashes out_ch in_ch () =
         aux password
       )
       else 
-        () in
+        (
+          (* Io.log_debug (fun () -> 
+            let pass_len = Bytes.length password in
+            let suffix = (Bytes.get password (pass_len - 1)) in
+            Printf.printf "Lastpass %d %c\n" pass_len suffix) *)
+        ) in
   
   check_password password hashes out_ch;
   aux password
