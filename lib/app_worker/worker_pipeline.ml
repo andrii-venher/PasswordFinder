@@ -38,6 +38,6 @@ let check_password password hashes suffix out_ch =
   | Some(username) -> 
     let password_decrypted = Bytes.to_string password in
     let decryption_result = Decrypted{ username; password_encrypted; password_decrypted; } in
-    Printf.printf "Worker %c -> %s\n" suffix (App_io.format_output_line decryption_result);
+    Printf.printf "Worker %c -> %s\n" suffix (Io.format_output_line decryption_result);
     flush stdout;
     Domainslib.Chan.send out_ch (Some(decryption_result))
