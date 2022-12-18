@@ -1,6 +1,10 @@
 open App_domain
 
-type worker_blueprint = { worker: unit -> unit; in_ch: user_data option Domainslib.Chan.t }
+type worker_blueprint =
+| WithWeight of { worker: user_data option Domainslib.Chan.t -> unit -> unit; weight: int; }
+| WithInChannel of { worker: unit -> unit; weight: int; in_ch: user_data option Domainslib.Chan.t; }
+
+(* type worker_blueprint = { worker: unit -> unit; in_ch: user_data option Domainslib.Chan.t; worker_weight: int; } *)
 
 let create_hashes data =
   let hashes = Hashtbl.create (List.length data) in
@@ -58,23 +62,29 @@ let create_initial_passwords start_length end_length start_suffix end_suffix =
         aux (acc @ [password]) length (Utils.char_add suffix 1) in
   aux [] start_length start_suffix
 
-let create_empty_workers initial_passwords =
-  List.map (fun password -> Worker_core.run_worker password) initial_passwords
+let create_empty_workers initial_passwords hashes out_ch =
+  List.map (fun password -> WithWeight({ worker = (Worker_core.run_worker password (Hashtbl.copy hashes) out_ch); weight = (Bytes.length password)})) initial_passwords
 
-let inject_hashes workers hashes =
-  List.map (fun worker -> worker (Hashtbl.copy hashes)) workers
+(* let inject_hashes workers hashes =
+  List.map (fun worker -> worker (Hashtbl.copy hashes)) workers *)
 
-let inject_out_channel workers out_ch =
-  List.map (fun worker -> worker out_ch) workers
+(* let inject_out_channel workers out_ch =
+  List.map (fun worker -> 
+    match worker with 
+    | WithWeight({ worker; weight; }) -> WithWeight({ worker = (worker out_ch); weight; })
+    | _ -> failwith "Wrong worker state.") workers *)
 
 let inject_in_channels workers in_chs =
-  List.map2 (fun worker in_ch -> { worker = (worker in_ch); in_ch }) workers in_chs
+  List.map2 (fun worker in_ch ->
+    match worker with
+    | WithWeight({ worker; weight }) -> WithInChannel({ worker = (worker in_ch); weight; in_ch; })
+    | _ -> failwith "Wrong worker state.") workers in_chs
 
 let create_worker_blueprints start_length end_length start_suffix end_suffix hashes out_ch =
   let initial_passwords = create_initial_passwords start_length end_length start_suffix end_suffix in
-  let workers = create_empty_workers initial_passwords in
-  let workers = inject_hashes workers hashes in
-  let workers = inject_out_channel workers out_ch in
+  let workers = create_empty_workers initial_passwords hashes out_ch in
+  (* let workers = inject_hashes workers hashes in *)
+  (* let workers = inject_out_channel workers out_ch in *)
   let in_chs = List.init (List.length workers) (fun _ -> Domainslib.Chan.make_unbounded ()) in
   let blueprints = inject_in_channels workers in_chs in
   blueprints
