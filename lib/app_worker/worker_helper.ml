@@ -1,5 +1,7 @@
 open App_domain
 
+type worker_blueprint = { worker: unit -> unit; in_ch: user_data option Domainslib.Chan.t }
+
 let create_hashes data =
   let hashes = Hashtbl.create (List.length data) in
   List.iter (fun user_data -> 
@@ -43,6 +45,39 @@ let create_hashes data =
   )
   | [] -> acc in
   aux [] distribution_list *)
+
+let create_initial_passwords start_length end_length start_suffix end_suffix =
+  let rec aux acc length suffix =
+    if length > end_length then
+      acc
+    else
+      if suffix > end_suffix then
+        aux acc (length + 1) start_suffix
+      else
+        let password = Worker_pipeline.init_password length suffix in
+        aux (acc @ [password]) length (Utils.char_add suffix 1) in
+  aux [] start_length start_suffix
+
+let create_empty_workers initial_passwords =
+  List.map (fun password -> Worker_core.run_worker password) initial_passwords
+
+let inject_hashes workers hashes =
+  List.map (fun worker -> worker (Hashtbl.copy hashes)) workers
+
+let inject_out_channel workers out_ch =
+  List.map (fun worker -> worker out_ch) workers
+
+let inject_in_channels workers in_chs =
+  List.map2 (fun worker in_ch -> { worker = (worker in_ch); in_ch }) workers in_chs
+
+let create_worker_blueprints start_length end_length start_suffix end_suffix hashes out_ch =
+  let initial_passwords = create_initial_passwords start_length end_length start_suffix end_suffix in
+  let workers = create_empty_workers initial_passwords in
+  let workers = inject_hashes workers hashes in
+  let workers = inject_out_channel workers out_ch in
+  let in_chs = List.init (List.length workers) (fun _ -> Domainslib.Chan.make_unbounded ()) in
+  let blueprints = inject_in_channels workers in_chs in
+  blueprints
 
 let create_suffix_channel_list start_suffix end_suffix =
   let rec aux acc = function

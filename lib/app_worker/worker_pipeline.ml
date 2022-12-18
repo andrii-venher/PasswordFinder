@@ -31,13 +31,15 @@ let pool_updates in_ch hashes =
 let check_exit hashes =
   Hashtbl.length hashes = 0
 
-let check_password password hashes suffix out_ch = 
+let check_password password hashes out_ch = 
   let password_encrypted = Utils.hash_bytes password in
   match Hashtbl.find_opt hashes password_encrypted with
   | None -> ()
   | Some(username) -> 
     let password_decrypted = Bytes.to_string password in
     let decryption_result = Decrypted{ username; password_encrypted; password_decrypted; } in
-    Printf.printf "Worker %c -> %s\n" suffix (Io.format_output_line decryption_result);
+    (* Printf.printf "Worker %c -> %s\n" suffix (Io.format_output_line decryption_result);
+    flush stdout; *)
+    Printf.printf "%s\n" (Io.format_output_line decryption_result);
     flush stdout;
     Domainslib.Chan.send out_ch (Some(decryption_result))

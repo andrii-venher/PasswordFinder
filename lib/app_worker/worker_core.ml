@@ -1,4 +1,4 @@
-let run_worker in_ch out_ch hashes password_length suffix = 
+let run_worker password hashes out_ch in_ch () = 
 
   let rec aux password =
     (* if true then
@@ -6,15 +6,22 @@ let run_worker in_ch out_ch hashes password_length suffix =
       flush stdout; *)
     Worker_pipeline.pool_updates in_ch hashes;
     if Worker_pipeline.check_exit hashes then 
-      ()
+      (
+        (* Printf.printf "Exit with pass %c: %s\n" suffix (Bytes.to_string password);
+        flush stdout; *)
+        ()
+      )
     else
       if Worker_pipeline.next_password password then (
-        Worker_pipeline.check_password password hashes suffix out_ch;
+        Worker_pipeline.check_password password hashes out_ch;
         aux password
       )
-      else
-        () in
+      else (
+        (* Printf.printf "Last %c\n" suffix;
+        flush stdout; *)
+        ()
+       ) in
   
-  let password = Worker_pipeline.init_password password_length suffix in
-  Worker_pipeline.check_password password hashes suffix out_ch;
+  (* let password = Worker_pipeline.init_password password_length suffix in *)
+  Worker_pipeline.check_password password hashes out_ch;
   aux password
