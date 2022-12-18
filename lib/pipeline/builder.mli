@@ -18,6 +18,9 @@ val create_worker_blueprints :
   char ->
   (string, string) Hashtbl.t ->
   App_domain.user_data option Domainslib.Chan.t -> worker_blueprint list
-  
+
 val distribute_blueprints :
   worker_blueprint list -> int -> worker_blueprint list list
+
+val string_of_worker_distribution :
+  worker_blueprint list list -> string

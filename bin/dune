@@ -1,6 +1,6 @@
 (executables
  (public_names password_finder)
  (names password_finder)
- (libraries threads domainslib digestif password_finder_lib)
+ (libraries threads domainslib digestif dotenv password_finder_lib)
  (flags (:standard -I +threads))
  )

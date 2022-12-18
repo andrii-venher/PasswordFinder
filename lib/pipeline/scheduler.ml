@@ -18,9 +18,10 @@ let run_worker_groups_async pool worker_groups =
 
   run_groups worker_groups
 
-let run_parallel num_domains pool hashes out_ch =
+let run_parallel pool hashes out_ch =
   let worker_blueprints = Builder.create_worker_blueprints 3 6 'a' 'z' hashes out_ch in
   let in_chs = List.map Builder.get_in_ch worker_blueprints in
-  let worker_groups = Builder.distribute_blueprints worker_blueprints num_domains in
+  let worker_groups = Builder.distribute_blueprints worker_blueprints (Config.num_domains - 1) in
+  Io.log_debug (fun () -> Printf.printf "%s" (Builder.string_of_worker_distribution worker_groups));
   run_worker_groups_async pool worker_groups;
   in_chs

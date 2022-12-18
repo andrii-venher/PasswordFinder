@@ -1,5 +1,7 @@
-open App_domain
+val read_user_data : string -> App_domain.user_data list
 
-val read_all_data: string -> user_data list
+val format_output_line : App_domain.user_data -> string
 
-val format_output_line: user_data -> string
+val log : (unit -> unit) -> unit
+
+val log_debug : (unit -> unit) -> unit
