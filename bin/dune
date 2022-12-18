@@ -3,4 +3,5 @@
  (names password_finder)
  (libraries threads domainslib digestif dotenv password_finder_lib)
  (flags (:standard -I +threads))
+ (promote (into "..") (until-clean))
  )
