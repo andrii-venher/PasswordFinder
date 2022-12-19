@@ -30,10 +30,17 @@ let await_hub pool hub_promise =
   )
 
 let run data =
-  let pool = create_pool () in
   let hashes = create_hashes data in
   let out_ch = create_out_ch () in
-  let worker_channels = Scheduler.run_parallel pool hashes out_ch in
-  let hub_promise = run_hub pool (Hub.run out_ch worker_channels (Hashtbl.length hashes)) in
-  await_hub pool hub_promise;
-  teardown_pool pool
+  if Config.num_domains > 1 then (
+    let pool = create_pool () in
+    let worker_channels = Scheduler.run_parallel pool hashes out_ch in
+    let hub_promise = run_hub pool (Hub.run out_ch worker_channels (Hashtbl.length hashes)) in
+    await_hub pool hub_promise;
+    teardown_pool pool
+  )
+  else 
+    let worker_channels = Scheduler.run_single_domain hashes out_ch in
+    let hub_thread = Thread.create (Hub.run out_ch worker_channels (Hashtbl.length hashes)) () in
+    Thread.join hub_thread
+
