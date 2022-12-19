@@ -11,6 +11,7 @@ UNZIPPED_FOLDER="open_me"
 PASSWORDS_FILE="passwords.txt"
 
 ROOT=$PWD
+TMP_FILE=$ROOT/.cracktmp
 
 if [ "$1" == "build" ]
 then
@@ -22,12 +23,14 @@ then
     exit
 fi
 
+START=`date +%s`
+
 while true
 do
   # Run password finder on the file with encrypted passwords
-  $ROOT/password_finder.exe $PASSWORDS_FILE | tee $ROOT/.crachtmp
+  $ROOT/password_finder.exe $PASSWORDS_FILE | tee $TMP_FILE
   # Get decrypted passwords
-  PASSWORDS=$(cat $ROOT/.crachtmp | awk -F '\t' '{print $2}' | awk -F ' ' '{print $2}')
+  PASSWORDS=$(cat $TMP_FILE | awk -F '\t' '{print $2}' | awk -F ' ' '{print $2}')
   # Try passwords to unzip the archive until the right one is found
   for password in $PASSWORDS
   do
@@ -43,12 +46,13 @@ do
     fi
   done
 
-  rm $ROOT/.crachtmp
+  rm $TMP_FILE
   cd $UNZIPPED_FOLDER
 
   if [ ! -e $PASSWORDS_FILE ]
   then
-    echo "Finished cracking"
+    END=`date +%s`
+    echo "Finished cracking (took about $((END-START)) seconds)"
     break
   fi
 done
