@@ -1,0 +1,2 @@
+(library
+ (name one_channel_poc))
