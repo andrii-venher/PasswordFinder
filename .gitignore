@@ -30,3 +30,7 @@ _opam/
 
 # executable artifact
 *.exe
+
+# crack script files
+.cracktmp
+open_me
