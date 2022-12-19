@@ -1,16 +1,16 @@
-## Shared channel usage PoC
+## PoC of single shared output channel pipeline
 
 This code proofs that it is possible to use one unbound channel to deliver data streams from multiple producers that run in parallel on different cores to the single consumer. This pipeline does not lead to producer blocks or data loss.
 
 ### How to run it?
 
 ```
-dune exec one_channel_poc
+dune exec poc_shared_out_channel
 ```
 
 ### What to expect?
 
-You can find the following predefined settings in `bin/one_channel_poc.ml`:
+You can find the following predefined values in `bin/main.ml`:
 ```ocaml
 let messages = 10
 let threads = 30

@@ -1,5 +1,0 @@
-(executable
- (public_name one_channel_poc)
- (name one_channel_poc)
- (libraries one_channel_poc threads domainslib)
- (flags (:standard -I +threads)))

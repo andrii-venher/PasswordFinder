@@ -1,0 +1,4 @@
+(executable
+ (public_name poc_shared_out_channel)
+ (name main)
+ (libraries poc_shared_out_channel threads domainslib))

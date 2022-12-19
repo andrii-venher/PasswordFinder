@@ -1,6 +1,6 @@
 (lang dune 3.6)
 
-(name one_channel_poc)
+(name poc_shared_out_channel)
 
 (generate_opam_files true)
 
@@ -16,7 +16,7 @@
 (documentation https://url/to/documentation)
 
 (package
- (name one_channel_poc)
+ (name poc_shared_out_channel)
  (synopsis "A short synopsis")
  (description "A longer description")
  (depends ocaml dune)

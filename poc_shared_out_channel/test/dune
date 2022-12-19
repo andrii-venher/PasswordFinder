@@ -1,0 +1,2 @@
+(test
+ (name poc_shared_out_channel))
