@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-You should have [`OCaml 5.0.0+`](https://github.com/ocaml-multicore/awesome-multicore-ocaml#installation) and [`dune 3.6+`](https://dune.build/install) installed.
+You should have [`OCaml 5.0.0~beta1+`](https://github.com/ocaml-multicore/awesome-multicore-ocaml#installation) and [`dune 3.6+`](https://dune.build/install) installed.
 
 Install required packages:
 ```
