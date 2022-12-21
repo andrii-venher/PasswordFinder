@@ -48,6 +48,6 @@ let run_single_domain hashes out_ch =
     hashes out_ch in
   let in_chs = List.map Builder.get_in_ch worker_blueprints in
   let workers = List.map Builder.get_worker worker_blueprints in
-  Io.log_debug (fun () -> Printf.printf "Run all workers in the single domain.\n");
+  Io.log_debug (fun () -> Printf.printf "Run %d workers in the single domain.\n" (List.length workers));
   run_workers_single_domain workers;
   in_chs
