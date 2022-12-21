@@ -20,13 +20,6 @@ else
   GROUPS_DIFF=-1
 fi
 
-if [ ! -z "$1" ]
-then
-  LABEL="$3"
-else
-  LABEL="nolabel"
-fi
-
 TIME=$(date "+%Y.%m.%d_%H.%M.%S")
 
 hyperfine --warmup 5 \
@@ -42,5 +35,5 @@ hyperfine --warmup 5 \
   "./$EXECUTABLE $PASSWORDS_FILE 14" \
   "./$EXECUTABLE $PASSWORDS_FILE 16" \
   "./$EXECUTABLE $PASSWORDS_FILE 20" \
-  --export-json benchmark_$LABEL_$TIME.json \
-  --export-markdown benchmark_$LABEL_$TIME.md
+  --export-json benchmark_$TIME.json \
+  --export-markdown benchmark_$TIME.md
