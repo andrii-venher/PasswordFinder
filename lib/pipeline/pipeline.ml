@@ -3,12 +3,12 @@ open App_domain
 let create_pool () =
   let num_domains = Config.num_domains in
   let pool = Domainslib.Task.setup_pool ~num_domains:(num_domains - 1) () in
-  Io.log_debug (fun () -> Printf.printf "Created task pool of %d domains.\n" num_domains);
+  Io.log_debug (fun () -> Printf.printf "Created a task pool of %d domains.\n" num_domains);
   pool
 
 let teardown_pool pool =
   Domainslib.Task.teardown_pool pool;
-  Io.log_debug (fun () -> Printf.printf "Task pool is torn down.\n");
+  Io.log_debug (fun () -> Printf.printf "Torn down the task pool.\n");
   flush stdout
 
 let create_hashes data =
