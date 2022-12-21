@@ -34,7 +34,7 @@ let run_parallel pool hashes out_ch =
     Config.password_greatest_letter 
     hashes out_ch in
   let in_chs = List.map Builder.get_in_ch worker_blueprints in
-  let worker_groups = Builder.distribute_blueprints worker_blueprints (Config.num_domains - 1) in
+  let worker_groups = Builder.distribute_blueprints worker_blueprints (Config.num_domains + Config.groups_diff) in
   Io.log_debug (fun () -> Printf.printf "%s" (Builder.string_of_worker_distribution worker_groups));
   run_worker_groups_parallel pool worker_groups;
   in_chs

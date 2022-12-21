@@ -16,6 +16,14 @@ let num_domains =
     | None -> 8
     | Some num_domains -> int_of_string num_domains
 
+let groups_diff = 
+  try
+    int_of_string (Sys.argv.(3))
+  with _ -> 
+    match Sys.getenv_opt "GROUPS_DIFF" with
+    | None -> -1
+    | Some groups_diff -> int_of_string groups_diff
+
 let debug_logs =
   match Sys.getenv_opt "DEBUG_LOGS" with
   | None -> false

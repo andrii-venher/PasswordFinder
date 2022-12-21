@@ -85,7 +85,7 @@ let distribute_blueprints worker_blueprints chunks =
     Array.to_list result
 
 let string_of_worker_distribution groups =
-  let result = ref "Worker groups distribution:\n" in
+  let result = ref (Printf.sprintf "Workers are distributed into %d groups:\n" (List.length groups)) in
   List.iteri (fun i group -> 
     let weight_sum = ref 0 in
     result := !result ^ Printf.sprintf "Group%d\t[" (i + 1);
