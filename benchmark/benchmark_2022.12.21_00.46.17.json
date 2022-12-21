@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "command": "./password_finder.exe passwords-bench.txt 1",
+      "command": "./password_finder.exe passwords-bench-long.txt 1",
       "mean": 127.33762987925999,
       "stddev": 6.511354882938034,
       "median": 126.64586289266,
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench.txt 2",
+      "command": "./password_finder.exe passwords-bench-long.txt 2",
       "mean": 140.44175470476,
       "stddev": 13.576086893539939,
       "median": 146.47980262816,
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench.txt 4",
+      "command": "./password_finder.exe passwords-bench-long.txt 4",
       "mean": 44.23128554596,
       "stddev": 3.3209438226336876,
       "median": 44.14591410466,
@@ -103,7 +103,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench.txt 8",
+      "command": "./password_finder.exe passwords-bench-long.txt 8",
       "mean": 21.294380028659997,
       "stddev": 0.7953603964197837,
       "median": 20.89125368016,
@@ -137,7 +137,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench.txt 16",
+      "command": "./password_finder.exe passwords-bench-long.txt 16",
       "mean": 15.260602111760003,
       "stddev": 0.8535352439985291,
       "median": 15.000097695160001,

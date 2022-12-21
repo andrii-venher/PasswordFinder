@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "command": "./password_finder.exe passwords-bench2.txt 1",
+      "command": "./password_finder.exe passwords-bench.txt 1",
       "mean": 14.001595350899999,
       "stddev": 1.882638386831262,
       "median": 14.247963033200001,
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 2",
+      "command": "./password_finder.exe passwords-bench.txt 2",
       "mean": 14.33029745,
       "stddev": 1.415171666783227,
       "median": 14.9656919087,
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 3",
+      "command": "./password_finder.exe passwords-bench.txt 3",
       "mean": 7.585241339000001,
       "stddev": 1.058512383642508,
       "median": 7.3047471657,
@@ -103,7 +103,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 4",
+      "command": "./password_finder.exe passwords-bench.txt 4",
       "mean": 4.1585725636,
       "stddev": 0.5861701999591455,
       "median": 3.8898301662,
@@ -137,7 +137,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 5",
+      "command": "./password_finder.exe passwords-bench.txt 5",
       "mean": 2.8211180129,
       "stddev": 0.29521110884068497,
       "median": 2.8114028652,
@@ -171,7 +171,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 6",
+      "command": "./password_finder.exe passwords-bench.txt 6",
       "mean": 2.5099650682999997,
       "stddev": 0.24912325038423944,
       "median": 2.6594314357,
@@ -205,7 +205,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 8",
+      "command": "./password_finder.exe passwords-bench.txt 8",
       "mean": 1.9442706098000002,
       "stddev": 0.1109108546756609,
       "median": 1.9606427397,
@@ -239,7 +239,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 12",
+      "command": "./password_finder.exe passwords-bench.txt 12",
       "mean": 1.3390962923000003,
       "stddev": 0.05884591698604168,
       "median": 1.3101686307000002,
@@ -273,7 +273,7 @@
       ]
     },
     {
-      "command": "./password_finder.exe passwords-bench2.txt 16",
+      "command": "./password_finder.exe passwords-bench.txt 16",
       "mean": 1.7985066150000004,
       "stddev": 0.16482969025463584,
       "median": 1.7985069712000001,
