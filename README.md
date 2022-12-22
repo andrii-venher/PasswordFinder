@@ -34,24 +34,36 @@ Other files:
 - `.env` - file with program settings that are dynamically loaded during execution time (may be changed after build as well).
 - `open_me.zip` - archive to crack (contains other archives inside).
 - `passwords.txt` - hashes passwords to the first archive.
-- [`poc_shared_out_channel`](poc_shared_out_channel) - PoC of single shared output channel pipeline. Please take a look if you would like to see executable proof of why this pipeline works correctly.
-- [`benchmark`](benchmark) - benchmark results.
+- [`report`](report) - project report.
+- [`benchmarking`](benchmarking) - results of the benchmarking.
+- [`poc_shared_out_channel`](poc_shared_out_channel) - PoC of single shared output channel pipeline.
 
 ## Usage
 
-To run the project, you need to build it using `dune` first:
+The simplest way to run the project is:
+```
+dune exec password_finder
+```
+
+If you do not want to rebuild project on every run, you need to build it using `dune` once:
 ```
 dune build
 ```
+
 Then you may run it with the default configuration like this:
 ```
 ./password_finder.exe
 ```
 
+To clean up build artifacts use:
+```
+dune clean
+```
+
 ### Configuration
 
 You may need to change the default configuration. In this case, take a look at `.env` file that is dynamically loaded to the program during the execution:
-```.env
+```
 FILENAME=passwords.txt      # input file name
 NUM_DOMAINS=16              # number of cores to use
 GROUPS_DIFF=-1              # difference between number of groups and number of domains
@@ -82,10 +94,12 @@ henry f3abb86bd34cf4d52698f14c0da1dc60
 
 To see a full-fledged example, you may run `crack.sh` script:
 ```
-./crash.sh
+./crack.sh
 ```
 It cracks the archive called `open_me.zip` recursively and prints a descriptive output to the console.
 
-## Benchmark
+## Analysis
 
-TODO: add section
+You may find more info about the pipeline architecture and the solved problems in the [`report`](report) section.
+
+The performance [`benchmarking`](benchmarking) was done as well.
