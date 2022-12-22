@@ -1,4 +1,6 @@
-# Benchmark
+# Benchmarking
+
+The command-line tool [`hyperfine`](https://github.com/sharkdp/hyperfine) is used to benchmark the program. Install it if you would like to run the following script yourself.
 
 Script `benchmark.sh` automatically performs a benchmarking of the program using different parallelism setups.
 
