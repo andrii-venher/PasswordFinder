@@ -1,3 +1,4 @@
+(** The message hub loop listens for incoming messages and broadcasts them to the worker channels. *)
 let run in_ch out_chs expected_messages () =
   let rec aux expected_messages =
     if expected_messages <= 0 then 

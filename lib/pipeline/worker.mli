@@ -1,3 +1,4 @@
+(** Starts the worker unit. *)
 val run :
   bytes ->
   (string, string) Hashtbl.t ->
