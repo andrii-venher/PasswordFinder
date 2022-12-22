@@ -100,6 +100,15 @@ Also, the optimal number of worker groups was found empirically:
 $$ worker\_groups = num\_domains - 1 $$
 During benchmark runs, the $ worker\_groups = num\_domains $ setup was always slower than the previously mentioned one. It could be because the message hub is run in the same task pool as the worker groups. It seems like the message hub occupies a domain and the process takes a lot of execution time from one selected core slowing down the whole app. However, when we run one worker group less than the number of domains, the message hub takes the left domain and the workload is distributed more evenly. It is also the reason why a two-domain setup performs almost the same as a non-parallel one. Namely, only one working group is created and the message hub is run in the second domain so the program does not perform computations in parallel.
 
+The performance gain of parallelism could be observed on the following CPU load chart. Both runs are done on the same input file but with a different number of domains. Note that even though CPU usage has increased dramatically, the execution time has not dropped by the same factor (this is also proved in the above benchmark results).
+
+\begin{figure}[h]
+  \caption{CPU load when using 4 domains and 16 domains respectively}
+  \vspace{0.2in}
+  \centering
+  \includegraphics[width=0.9\textwidth]{resources/cpu_load.png}
+\end{figure}
+
 \section{Further improvements}
 
 One of the most obvious points to improve is the password generation algorithm. Each worker computes a unique sequence of n-length permutations but they do this from the lexicographically smallest one to the greatest one. In other words, a password like \emph{aaaa} is generated much earlier than \emph{zzzz}. This approach is good when the passwords are distributed \emph{truly uniformly} because each password from \emph{aaaa} \emph{zzzz} then has an equal chance to appear in the input data. But in reality, this is not the case and the passwords are not evenly distributed. An algorithm to generate more popular passwords (like meaningful words) first could be used to find correct digests faster.
