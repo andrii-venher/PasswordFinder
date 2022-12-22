@@ -92,7 +92,7 @@ The default input file contains mostly 3-digit passwords that are computed very 
     \end{tabular}
 \end{table}
 
-The benchmarking was done on a machine with the following tech specs: AMD Ryzen 5800H (3.2 GHz - 4.4 GHz, 8 cores / 16 threads), and 16 GB of RAM. 
+The benchmarking was done on a machine with the following tech specs: AMD Ryzen 5800H (3.2 GHz - 4.4 GHz, 8 cores / 16 threads), and 16 GB of RAM. The command-line benchmarking tool \href{https://github.com/sharkdp/hyperfine}{\textbf{hyperfine}} is used to measure the performance of the program. Each setup is run 10 times after 5 warmup runs on the cold machine in order to reduce measurement error.
 
 At first glance, it is obvious that parallel computations in general are more efficient. Namely, the fastest run is when all the machine threads are used. However, the speedup is not linear, so 16 domains finish not twice as fast as 8 domains. Also, it is interesting to notice that two domains are not even close to running twice as fast as a single-core setup. Moreover, it seems like this case is even slower than the non-parallel one. It might be caused by the overhead of domain creation that neglects the gained computations speedup by parallelism. When the number of domains is greater than the number of machine threads/cores, a performance decline is noticed.
 
