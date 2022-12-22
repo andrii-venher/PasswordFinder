@@ -100,6 +100,6 @@ It cracks the archive called `open_me.zip` recursively and prints a descriptive 
 
 ## Analysis
 
-You may find more info about the pipeline architecture and the solved problems in the [`report`](report) section.
+You may find more info about the pipeline architecture and the solved problems in the [`report`](report/report.pdf) document.
 
 The performance [`benchmarking`](benchmarking) was done as well.
