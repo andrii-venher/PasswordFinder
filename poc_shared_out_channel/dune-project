@@ -5,22 +5,16 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github andrii-venher/PasswordFinder))
 
-(authors "Author Name")
+(authors "Andrii Venher")
 
-(maintainers "Maintainer Name")
-
-(license LICENSE)
-
-(documentation https://url/to/documentation)
+(license MIT)
 
 (package
  (name poc_shared_out_channel)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "POC of shared output channel usage.")
+ (description "")
  (depends ocaml dune)
- (tags
-  (topics "to describe" your project)))
-
-; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
+ )
+ 

@@ -5,17 +5,15 @@
 (generate_opam_files true)
 
 (source
- (github ffelten/proj-hash))
+ (github andrii-venher/PasswordFinder))
 
-(authors "Florian Felten")
+(authors "Andrii Venher")
 
 (license MIT)
 
 (package
  (name password_finder)
- (synopsis "Brute force password attack in multicore Ocaml.")
+ (synopsis "Brute force password attack in multicore OCaml.")
  (description "")
- (depends ocaml dune)
+ (depends ocaml dune digestif)
  )
-
-
